@@ -1,0 +1,62 @@
+#include <iostream>
+using namespace std;
+int main ()
+{
+    double principal, annual_rate, monthly_payment, last_month_payment ;
+    //taking input
+    cout << "Loan amount: $";
+    cin >> principal;
+
+    cout << "Enter the interest rate (enter 7.2 for 7.2%): ";
+    cin >> annual_rate;
+
+    double monthly_rate = annual_rate / (12 * 100);
+
+    cout << "Enter the amount you are willing to pay every month: $";
+    cin >> monthly_payment;
+
+    /*Since the monthly payment must be greater than the interest
+    on 1st month so as to shrink the total balance therefore we
+    must invalidate the amount < interest in the 1st month*/
+
+    double interest_1st_month = principal * monthly_rate;
+    while( monthly_payment <= interest_1st_month)
+    {
+        cout << "Monthly payment is too low, with this amount the loan cannot be repaid" << endl;
+        cout << "Minimum amount that is needed to repay the loan is $"<< interest_1st_month << endl;
+        cout << "Enter a higher amount: $";
+        cin >> monthly_payment;
+    }
+
+    //Calculating the month user will require to repay the loan
+    double balance = principal;
+    int months = 0;
+    double total_interest = 0.0;
+
+    while (balance > 0.1) //using concept of tolerance to avoid floating point error     
+    {
+        //After every month interest is applied on the remaining balance
+        double interest = monthly_rate * balance;
+
+        //adjust the last payment if its greater than the remaining balance + interest
+        if (balance + interest <= monthly_payment)
+        {
+        last_month_payment = balance + interest;
+        }
+        //updating balance by adding interest and subtracting monthly payment
+        balance = balance + interest - monthly_payment;
+        months++;
+
+        //total interest
+        total_interest += interest;
+
+    }
+    cout << "-----------------------------------------------------------\n";
+    cout << "CONGRATULATIONS ON REPAYING THE LOAN, HERE ARE YOUR DETAILS" << endl;
+    cout << "-----------------------------------------------------------\n";
+    cout << "Months taken to repay the loan: " << months << endl;
+    cout << "Total interest paid: $" << total_interest << endl;
+    cout << "Last payment amount: $" << last_month_payment << endl;
+
+    return 0;
+}
